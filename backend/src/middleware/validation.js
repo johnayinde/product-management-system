@@ -125,4 +125,24 @@ exports.schemas = {
     maxPrice: Joi.number().min(0),
     featured: Joi.boolean(),
   }).unknown(true),
+
+  // Order schemas
+  orderCreate: Joi.object({
+    products: Joi.array()
+      .items(
+        Joi.object({
+          productId: Joi.string().required(),
+          quantity: Joi.number().integer().min(1).required(),
+        })
+      )
+      .min(1)
+      .required(),
+    shippingAddress: Joi.object({
+      street: Joi.string().required(),
+      city: Joi.string().required(),
+      state: Joi.string().required(),
+      zipCode: Joi.string().required(),
+      country: Joi.string().required(),
+    }).required(),
+  }),
 };
