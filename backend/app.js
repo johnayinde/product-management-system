@@ -7,6 +7,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const logger = require("./src/utils/logger");
 const errorHandler = require("./src/middleware/errorHandler");
 
+const authRoutes = require("./src/routes/authRoutes");
+
 const app = express();
 app.use(cors());
 
@@ -27,6 +29,8 @@ if (process.env.NODE_ENV === "development") {
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "success", message: "Server is running" });
 });
+
+app.use("/api/auth", authRoutes);
 
 // 404 handler
 app.all("*", (req, res, next) => {

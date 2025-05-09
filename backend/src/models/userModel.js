@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      index: true,
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"],
     },
     password: {
@@ -51,9 +52,6 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
-// indexing for email for faster queries
-userSchema.index({ email: 1 });
 
 // Pre-Hooks
 // Hash the password before saving
