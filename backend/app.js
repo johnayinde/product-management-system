@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
+const logger = require("./src/utils/logger");
+const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
 app.use(cors());
@@ -33,5 +35,7 @@ app.all("*", (req, res, next) => {
     message: `Cannot find ${req.originalUrl} on this server!`,
   });
 });
+
+app.use(errorHandler);
 
 module.exports = app;
