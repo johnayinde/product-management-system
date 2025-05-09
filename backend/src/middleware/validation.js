@@ -93,4 +93,25 @@ exports.schemas = {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
+
+  // Product schemas
+  productCreate: Joi.object({
+    name: Joi.string().min(2).max(100).required(),
+    description: Joi.string().min(10).max(1000).required(),
+    price: Joi.number().positive().precision(2).required(),
+    quantity: Joi.number().integer().min(0).required(),
+    category: Joi.string().required(),
+    imageUrl: Joi.string().uri().allow(""),
+    featured: Joi.boolean().default(false),
+  }),
+
+  productUpdate: Joi.object({
+    name: Joi.string().min(2).max(100),
+    description: Joi.string().min(10).max(1000),
+    price: Joi.number().positive().precision(2),
+    quantity: Joi.number().integer().min(0),
+    category: Joi.string(),
+    imageUrl: Joi.string().uri().allow(""),
+    featured: Joi.boolean(),
+  }),
 };
