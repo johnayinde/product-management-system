@@ -114,4 +114,15 @@ exports.schemas = {
     imageUrl: Joi.string().uri().allow(""),
     featured: Joi.boolean(),
   }),
+
+  productQuery: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(10),
+    sort: Joi.string().default("-createdAt"),
+    search: Joi.string(),
+    category: Joi.string(),
+    minPrice: Joi.number().min(0),
+    maxPrice: Joi.number().min(0),
+    featured: Joi.boolean(),
+  }).unknown(true),
 };
