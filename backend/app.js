@@ -9,6 +9,7 @@ const errorHandler = require("./src/middleware/errorHandler");
 
 const authRoutes = require("./src/routes/authRoutes");
 const productRoutes = require("./src/routes/productRoutes");
+const orderRoutes = require("./src/routes/orderRoutes");
 
 const app = express();
 app.use(cors());
@@ -33,6 +34,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 // 404 handler
 app.all("*", (req, res, next) => {
