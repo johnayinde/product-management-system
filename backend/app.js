@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const logger = require("./src/utils/logger");
 const errorHandler = require("./src/middleware/errorHandler");
+const rateLimit = require("express-rate-limit");
 
 const authRoutes = require("./src/routes/authRoutes");
 const productRoutes = require("./src/routes/productRoutes");
@@ -26,6 +27,17 @@ app.use(mongoSanitize());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: process.env.RATE_LIMIT_WINDOW_MS,
+  max: process.env.RATE_LIMIT_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requestss from this IP, please try again after 15 minutes",
+});
+
+app.use("/api", limiter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
