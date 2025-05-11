@@ -13,7 +13,13 @@ const productRoutes = require("./src/routes/productRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
 
 const app = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGIN?.split(","),
+    credentials: true,
+  })
+);
 
 app.use(helmet());
 app.use(express.json());
@@ -37,7 +43,7 @@ const limiter = rateLimit({
   message: "Too many requestss from this IP, please try again after 15 minutes",
 });
 
-app.use("/api", limiter);
+// app.use("/api", limiter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
