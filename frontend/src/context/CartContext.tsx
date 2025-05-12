@@ -54,8 +54,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    console.log(user);
-
     const savedCart = localStorage.getItem(`cart_${user?.id}`);
     if (savedCart) {
       try {
@@ -67,7 +65,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(`cart_${user?.id}`, JSON.stringify(items));
   }, [items, user]);
