@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import toast from "react-hot-toast";
 import { Product } from "../services/productService";
+import { useAuth } from "./AuthContext";
 
 export interface CartItem {
   productId: string;
@@ -16,6 +17,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string;
+  stock: number;
 }
 
 interface CartContextType {
@@ -42,6 +44,7 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { user } = useAuth();
 
   // Calculate totals whenever cart items change
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -51,7 +54,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
+    console.log(user);
+
+    const savedCart = localStorage.getItem(`cart_${user?.id}`);
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
@@ -60,30 +65,45 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         console.error(error);
       }
     }
-  }, []);
+  }, [user]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(items));
-  }, [items]);
+    localStorage.setItem(`cart_${user?.id}`, JSON.stringify(items));
+  }, [items, user]);
 
   // Add item to cart
   const addItem = (product: Product, quantity: number) => {
+    let message = "";
+    let shouldToast = false;
+
     setItems((prevItems) => {
-      // Check if item already exists in cart
       const existingItemIndex = prevItems.findIndex(
         (item) => item.productId === product._id
       );
 
       if (existingItemIndex >= 0) {
-        // Update existing item
+        const existingItem = prevItems[existingItemIndex];
+        const newQuantity = existingItem.quantity + quantity;
+
+        if (newQuantity > product.quantity) {
+          message = `Only ${product.quantity} items in stock`;
+          return prevItems;
+        }
+
         const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        toast.success(`Updated quantity for ${product.name}`);
+        updatedItems[existingItemIndex].quantity = newQuantity;
+        message = `Updated quantity for ${product.name}`;
+        shouldToast = true;
         return updatedItems;
       } else {
-        // Add new item
-        toast.success(`Added ${product.name} to cart`);
+        if (quantity > product.quantity) {
+          message = `Only ${product.quantity} items in stock`;
+          return prevItems;
+        }
+
+        message = `Added ${product.name} to cart`;
+        shouldToast = true;
         return [
           ...prevItems,
           {
@@ -92,10 +112,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             price: product.price,
             quantity,
             imageUrl: product.imageUrl,
+            stock: product.quantity,
           },
         ];
       }
     });
+
+    if (shouldToast && message) {
+      toast.success(message);
+    } else if (message) {
+      toast.error(message);
+    }
   };
 
   // Update item quantity
@@ -114,15 +141,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // Remove item from cart
   const removeItem = (productId: string) => {
+    let removedItemName = "";
+
     setItems((prevItems) => {
       const itemToRemove = prevItems.find(
         (item) => item.productId === productId
       );
-      if (itemToRemove) {
-        toast.success(`Removed ${itemToRemove.name} from cart`);
-      }
+      if (itemToRemove) removedItemName = itemToRemove.name;
+
       return prevItems.filter((item) => item.productId !== productId);
     });
+
+    if (removedItemName) toast.success(`Removed ${removedItemName} from cart`);
   };
 
   const clearCart = () => {

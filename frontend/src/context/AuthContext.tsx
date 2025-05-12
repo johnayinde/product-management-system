@@ -14,6 +14,7 @@ import authService, {
   LoginData,
   SignupData,
 } from "../services/authService";
+import { useCart } from "./CartContext";
 
 interface AuthContextType {
   user: User | null;
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const { clearCart } = useCart();
   // Check if user is authenticated
   const checkAuth = async () => {
     setLoading(true);
@@ -96,6 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
+      clearCart();
       await authService.logout();
       setUser(null);
       router.push("/auth/login");

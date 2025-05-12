@@ -38,7 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({
       const params: any = { page, limit: 8 };
 
       if (category) params.category = category;
-      if (featured !== undefined) params.featured = featured;
+      // if (featured !== undefined) params.featured = featured;
       if (searchQuery) params.search = searchQuery;
 
       const response = await productService.getAllProducts(params);
