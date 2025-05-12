@@ -1,13 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FiShoppingBag, FiUser, FiTruck, FiCreditCard } from "react-icons/fi";
 import MainLayout from "@/components/layout/MainLayout";
+import ProductList from "@/components/products/ProductList";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
+import productService, { Product } from "@/services/productService";
 
 const HomePage: React.FC = () => {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await productService.getAllProducts({
+          featured: true,
+          limit: 4,
+        });
+        setFeaturedProducts(response.data.products);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -22,18 +44,15 @@ const HomePage: React.FC = () => {
               payments all in one place.
             </p>
             <div className="flex space-x-4">
-              <Button as={Link} href="/products" size="lg">
-                Browse Products
-              </Button>
-              <Button
-                as={Link}
-                href="/auth/signup"
-                variant="outline"
-                size="lg"
-                className="bg-white"
-              >
-                Get Started
-              </Button>
+              <Link href="/products">
+                <Button size="lg">Browse Products</Button>
+              </Link>
+
+              <Link href="/auth/signup">
+                <Button variant="outline" size="lg" className="bg-white">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -119,6 +138,20 @@ const HomePage: React.FC = () => {
             View all products →
           </Link>
         </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : featuredProducts.length > 0 ? (
+          <ProductList initialProducts={featuredProducts} />
+        ) : (
+          <Card>
+            <div className="text-center py-12">
+              <p className="text-gray-500">No featured products available.</p>
+            </div>
+          </Card>
+        )}
       </section>
 
       {/* CTA Section */}
@@ -128,9 +161,9 @@ const HomePage: React.FC = () => {
           Create an account today and experience the simplicity of our inventory
           management system.
         </p>
-        <Button as={Link} href="/auth/signup" size="lg">
-          Sign Up Now
-        </Button>
+        <Link href="/auth/signup">
+          <Button size="lg">Sign Up Now</Button>
+        </Link>
       </section>
     </MainLayout>
   );

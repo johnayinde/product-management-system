@@ -61,7 +61,6 @@ const Header: React.FC = () => {
 
           {/* Secondary navigation */}
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            {/* User menu */}
             <div className="relative">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-3">
