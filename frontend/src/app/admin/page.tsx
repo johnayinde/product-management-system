@@ -32,12 +32,10 @@ const AdminDashboard: React.FC = () => {
       const orderResponse = await orderService.getOrderStats();
       setOrderStats(orderResponse.data);
 
-      // Fetch product statistics
       const productResponse = await productService.getProductStats();
       setProductStats(productResponse.data);
     } catch (err) {
       setError("Failed to load dashboard data");
-      console.error("Error fetching dashboard data:", err);
     } finally {
       setLoading(false);
     }
@@ -181,7 +179,7 @@ const AdminDashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <Card title="Quick Actions" className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <Link href="/admin/products/new">
               <Button fullWidth className="flex items-center justify-center">
                 <FiShoppingBag className="mr-2" />
@@ -199,7 +197,7 @@ const AdminDashboard: React.FC = () => {
               </Button>
             </Link>
 
-            <Link href="/admin/orders">
+            <Link href="/orders">
               <Button
                 fullWidth
                 variant="outline"
@@ -207,17 +205,6 @@ const AdminDashboard: React.FC = () => {
               >
                 <FiPackage className="mr-2" />
                 View All Orders
-              </Button>
-            </Link>
-
-            <Link href="/admin/users">
-              <Button
-                fullWidth
-                variant="outline"
-                className="flex items-center justify-center"
-              >
-                <FiPackage className="mr-2" />
-                Manage Users
               </Button>
             </Link>
           </div>

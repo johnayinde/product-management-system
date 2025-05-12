@@ -161,16 +161,19 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gray-100 rounded-lg p-8 text-center mb-16">
-        <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
-        <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-          Create an account today and experience the simplicity of our inventory
-          management system.
-        </p>
-        <Link href="/auth/signup">
-          <Button size="lg">Sign Up Now</Button>
-        </Link>
-      </section>
+      {!user && (
+        <section className="bg-gray-100 rounded-lg p-8 text-center mb-16">
+          <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Create an account today and experience the simplicity of our
+            inventory management system.
+          </p>
+
+          <Link href="/auth/signup">
+            <Button size="lg">Sign Up Now</Button>
+          </Link>
+        </section>
+      )}
     </MainLayout>
   );
 };

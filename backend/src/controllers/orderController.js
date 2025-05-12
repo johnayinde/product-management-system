@@ -19,6 +19,9 @@ exports.createOrder = async (req, res, next) => {
     const orderItems = [];
     let totalAmount = 0;
 
+    const TAX_RATE = 0.1;
+    const SHIPPING_COST = totalAmount > 50 ? 0 : 10;
+
     for (const item of products) {
       const product = await Product.findById(item.productId);
 
@@ -42,10 +45,13 @@ exports.createOrder = async (req, res, next) => {
         name: product.name,
         quantity: item.quantity,
         price: product.price,
+        totalPrice: item.totalPrice,
       });
 
       totalAmount += product.price * item.quantity;
     }
+    const taxAmount = totalAmount * TAX_RATE;
+    const finalAmount = totalAmount + taxAmount + SHIPPING_COST;
 
     const order = await Order.create({
       user: req.user._id,
@@ -65,14 +71,13 @@ exports.createOrder = async (req, res, next) => {
     });
 
     const reference = `order_${order._id}_${Date.now()}`;
+    const callbackUrl = `${process.env.FRONTEND_URL}/orders/confirm/?reference=${reference}`;
 
     const paystackResponse = await paystack.post("/transaction/initialize", {
       email: req.user.email,
-      amount: Math.round(totalAmount * 100),
+      amount: Math.round(finalAmount * 100),
       reference,
-      callback_url: `${req.protocol}://${req.get(
-        "host"
-      )}/api/orders/verify-payment`,
+      callback_url: callbackUrl,
       metadata: {
         orderId: order._id.toString(),
         userId: req.user._id.toString(),
