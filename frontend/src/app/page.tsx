@@ -8,8 +8,11 @@ import ProductList from "@/components/products/ProductList";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import productService, { Product } from "@/services/productService";
+import { useAuth } from "@/context/AuthContext";
 
 const HomePage: React.FC = () => {
+  const { user } = useAuth();
+
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +32,6 @@ const HomePage: React.FC = () => {
 
     fetchFeaturedProducts();
   }, []);
-
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -45,14 +47,18 @@ const HomePage: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <Link href="/products">
-                <Button size="lg">Browse Products</Button>
-              </Link>
-
-              <Link href="/auth/signup">
-                <Button variant="outline" size="lg" className="bg-white">
-                  Get Started
+                <Button size="lg" className=" border-2 border-white">
+                  Browse Products
                 </Button>
               </Link>
+
+              {!user && (
+                <Link href="/auth/signup">
+                  <Button variant="outline" size="lg" className="bg-white">
+                    Get Started
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

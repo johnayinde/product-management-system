@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiShoppingCart, FiUser, FiMenu, FiX } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 const Header: React.FC = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { totalItems } = useCart();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -22,7 +24,7 @@ const Header: React.FC = () => {
 
   const authLinks = isAuthenticated
     ? [
-        ...(isAdmin ? [{ name: "Admin", path: "/admin" }] : []),
+        ...(isAdmin ? [{ name: "Admin Dashboard", path: "/admin" }] : []),
         { name: "Orders", path: "/orders" },
         { name: "Profile", path: "/profile" },
       ]
@@ -61,12 +63,39 @@ const Header: React.FC = () => {
 
           {/* Secondary navigation */}
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
+            {isAuthenticated && (
+              <Link
+                href="/cart"
+                className="relative p-2 text-gray-600 hover:text-gray-900"
+              >
+                <FiShoppingCart className="h-6 w-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
+
+            {/* User menu */}
             <div className="relative">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-3">
                   <span className="text-sm font-medium text-gray-700">
                     {user?.name}
                   </span>
+
+                  <div className="flex items-center space-x-4">
+                    {authLinks.map((link) => (
+                      <Link
+                        key={link.path}
+                        href={link.path}
+                        className="text-sm font-medium text-gray-700 hover:text-blue-600"
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
                   <button
                     onClick={() => logout()}
                     className="text-sm text-gray-700 hover:text-blue-600"
