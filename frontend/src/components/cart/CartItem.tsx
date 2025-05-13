@@ -28,6 +28,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         {item.imageUrl ? (
           <img
+            crossOrigin="anonymous"
             src={item.imageUrl}
             alt={item.name}
             className="h-full w-full object-cover object-center"

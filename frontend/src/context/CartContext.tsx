@@ -44,7 +44,7 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   // Calculate totals whenever cart items change
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -73,6 +73,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const addItem = (product: Product, quantity: number) => {
     let message = "";
     let shouldToast = false;
+
+    if (!isAuthenticated) return;
 
     setItems((prevItems) => {
       const existingItemIndex = prevItems.findIndex(

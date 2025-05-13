@@ -177,7 +177,7 @@ const OrdersPage: React.FC = () => {
                     <div className="space-y-2">
                       {order.products.map((item) => (
                         <div
-                          key={item.product}
+                          key={item._id}
                           className="flex justify-between items-center bg-gray-50 p-2 rounded"
                         >
                           <div className="flex items-center">
@@ -222,9 +222,7 @@ const OrdersPage: React.FC = () => {
                     {isAdmin && (
                       <Button
                         variant="primary"
-                        onClick={() =>
-                          router.push(`/admin/orders/${order._id}`)
-                        }
+                        onClick={() => router.push(`/orders/${order._id}`)}
                       >
                         Manage Order
                       </Button>

@@ -93,6 +93,7 @@ const ProductDetailPage: React.FC = () => {
         <div className="bg-white rounded-lg overflow-hidden shadow-md">
           {product.imageUrl ? (
             <img
+              crossOrigin="anonymous"
               src={product.imageUrl}
               alt={product.name}
               className="w-full h-full object-cover object-center"

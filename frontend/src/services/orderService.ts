@@ -2,6 +2,7 @@ import api from "../lib/api";
 
 // Define types
 export interface OrderItem {
+  _id: string;
   product: string;
   name: string;
   quantity: number;
