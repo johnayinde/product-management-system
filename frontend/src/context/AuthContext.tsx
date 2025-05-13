@@ -7,7 +7,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import authService, {
   User,
@@ -47,6 +47,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { clearCart } = useCart();
+  const pathname = usePathname();
+
+  const publicPaths = [
+    "/auth/login",
+    "/auth/signup",
+    "/auth/forgot-password",
+    "/auth/reset-password/",
+  ];
+
+  const isPublicPage =
+    publicPaths.includes(pathname || "") ||
+    pathname?.startsWith("/auth/reset-password");
+
   // Check if user is authenticated
   const checkAuth = async () => {
     setLoading(true);
@@ -107,10 +120,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Check authentication status on initial load
   useEffect(() => {
+    if (isPublicPage) {
+      setLoading(false);
+      return;
+    }
+
     checkAuth();
-  }, []);
+  }, [pathname]);
 
   // Memoized value to avoid unnecessary re-renders
   const value = {

@@ -76,6 +76,22 @@ const authService = {
     return response.data;
   },
 
+  forgetPassword: async (email: string) => {
+    const response = await api.post("/auth/forgot-password", {
+      email,
+    });
+
+    return response.data;
+  },
+
+  resetPassword: async (token: string, password: string) => {
+    const response = await api.patch(`/auth/reset-password/${token}`, {
+      password,
+    });
+
+    return response.data;
+  },
+
   isAuthenticated: (): boolean => {
     if (typeof window === "undefined") return false;
     return !!localStorage.getItem("token");
