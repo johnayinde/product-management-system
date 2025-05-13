@@ -256,7 +256,7 @@ exports.checkProductStock = async (req, res, next) => {
   }
 };
 
-exports.uploadProductImages = (req, res) => {
+exports.uploadProductImages = (req, res, next) => {
   upload(req, res, function (err) {
     try {
       if (err instanceof multer.MulterError) {

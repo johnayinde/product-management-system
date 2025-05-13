@@ -4,7 +4,6 @@ const { protect, restrictTo } = require("../middleware/auth");
 const {
   validateBody,
   validateQuery,
-  validateParams,
   schemas,
 } = require("../middleware/validation");
 

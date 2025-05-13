@@ -3,7 +3,6 @@ const crypto = require("crypto");
 const User = require("../models/userModel");
 const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
-const logger = require("../utils/logger");
 
 /**
  * Create JWT token

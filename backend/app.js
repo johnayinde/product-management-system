@@ -64,7 +64,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
 // 404 handler
-app.all("*", (req, res, next) => {
+app.all("*", (req, res) => {
   res.status(404).json({
     status: "error",
     message: `Cannot find ${req.originalUrl} on this server!`,
