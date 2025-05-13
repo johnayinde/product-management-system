@@ -34,7 +34,7 @@ const EditProductPage: React.FC = () => {
 
   const [serverError, setServerError] = useState("");
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [, setSelectedImages] = useState<File[]>([]);
 
   const {
     register,
@@ -67,7 +67,7 @@ const EditProductPage: React.FC = () => {
         if (data.imageUrl) {
           setImagePreviews([data.imageUrl]);
         }
-      } catch (error) {
+      } catch (err) {
         toast.error("Failed to fetch product details");
       }
     };
@@ -85,7 +85,7 @@ const EditProductPage: React.FC = () => {
     }
   };
 
-  const removeImage = (indexToRemove: number) => {
+  const removeImage = () => {
     setImagePreviews([]);
     setSelectedImages([]);
     setValue("images", []);
@@ -223,7 +223,7 @@ const EditProductPage: React.FC = () => {
                       />
                       <button
                         type="button"
-                        onClick={() => removeImage(index)}
+                        onClick={() => removeImage()}
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
                       >
                         <FiX className="h-3 w-3" />

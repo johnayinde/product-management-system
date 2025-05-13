@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import MainLayout from "@/components/layout/MainLayout";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";

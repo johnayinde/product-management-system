@@ -13,7 +13,7 @@ const PaymentCallback = () => {
   useEffect(() => {
     const verifyPayment = async () => {
       try {
-        const response = await orderService.verifyPayment(`${reference}`);
+        await orderService.verifyPayment(`${reference}`);
         toast.success("Payment successful! Redirecting...");
         router.replace("/cart");
       } catch (error) {
