@@ -40,6 +40,11 @@ router.patch(
 );
 
 router.delete("/:id", restrictTo("admin"), productController.deleteProduct);
+router.post(
+  "/upload-images",
+  restrictTo("admin"),
+  productController.uploadProductImages
+);
 
 // Product statistics
 router.get(

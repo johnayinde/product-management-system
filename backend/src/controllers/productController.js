@@ -2,7 +2,8 @@ const Product = require("../models/productModel");
 const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
 const logger = require("../utils/logger");
-
+const multer = require("multer");
+const upload = require("../utils/multer");
 /**
  * Get all products with filtering, sorting, and pagination
  * @param {Object} req - Express request object
@@ -253,4 +254,39 @@ exports.checkProductStock = async (req, res, next) => {
     logger.error("Error checking product stock:", error);
     next(new ApiError("Error checking product stock", 500));
   }
+};
+
+exports.uploadProductImages = (req, res) => {
+  upload(req, res, function (err) {
+    try {
+      if (err instanceof multer.MulterError) {
+        return res
+          .status(400)
+          .json(ApiResponse.error("Upload error", { message: err.message }));
+      } else if (err) {
+        return res
+          .status(500)
+          .json(ApiResponse.error("Server error", { message: err.message }));
+      }
+
+      // No files uploaded
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json(ApiResponse.error("No images uploaded"));
+      }
+
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const imageUrls = req.files.map(
+        (file) => `${baseUrl}/uploads/products/${file.filename}`
+      );
+
+      return res
+        .status(200)
+        .json(
+          ApiResponse.success("Images uploaded successfully", { imageUrls })
+        );
+    } catch (error) {
+      logger.error("Error uploading image:", error);
+      next(new ApiError("Error uploading image", 500));
+    }
+  });
 };

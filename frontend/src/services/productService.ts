@@ -109,6 +109,13 @@ const productService = {
     const response = await api.get("/products/stats/categories");
     return response.data;
   },
+
+  uploadProductImages: async (formData: FormData) => {
+    const response = await api.post("/products/upload-images", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data.data;
+  },
 };
 
 export default productService;
