@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/common/ProtectedRoute";
 import productService from "@/services/productService";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import AdminQuickActions from "@/components/admin/AdminQuickActions";
 
 const AdminProductDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -89,48 +90,7 @@ const AdminProductDashboard: React.FC = () => {
         </h1>
 
         {/* Quick Actions */}
-        <Card title="Quick Actions" className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <Link href="/admin/products/new">
-              <Button fullWidth className="flex items-center justify-center">
-                <FiShoppingBag className="mr-2" />
-                Add New Product
-              </Button>
-            </Link>
-            <Link href="/admin/products">
-              <Button
-                fullWidth
-                variant="secondary"
-                className="flex items-center justify-center"
-              >
-                <FiShoppingBag className="mr-2" />
-                Manage Products
-              </Button>
-            </Link>
-
-            <Link href="/admin/orders">
-              <Button
-                fullWidth
-                variant="outline"
-                className="flex items-center justify-center"
-              >
-                <FiPackage className="mr-2" />
-                View All Orders
-              </Button>
-            </Link>
-
-            <Link href="/admin/users">
-              <Button
-                fullWidth
-                variant="outline"
-                className="flex items-center justify-center"
-              >
-                <FiPackage className="mr-2" />
-                Manage Users
-              </Button>
-            </Link>
-          </div>
-        </Card>
+        <AdminQuickActions />
 
         {/* Recent Orders */}
         <Card title="Manage Products" className="mb-8">

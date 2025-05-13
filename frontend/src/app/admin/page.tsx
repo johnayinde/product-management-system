@@ -14,6 +14,7 @@ import Button from "@/components/common/Button";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import productService from "@/services/productService";
 import orderService from "@/services/orderService";
+import AdminQuickActions from "@/components/admin/AdminQuickActions";
 
 const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -178,38 +179,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <Card title="Quick Actions" className="mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <Link href="/admin/products/new">
-              <Button fullWidth className="flex items-center justify-center">
-                <FiShoppingBag className="mr-2" />
-                Add New Product
-              </Button>
-            </Link>
-            <Link href="/admin/products">
-              <Button
-                fullWidth
-                variant="secondary"
-                className="flex items-center justify-center"
-              >
-                <FiShoppingBag className="mr-2" />
-                Manage Products
-              </Button>
-            </Link>
-
-            <Link href="/orders">
-              <Button
-                fullWidth
-                variant="outline"
-                className="flex items-center justify-center"
-              >
-                <FiPackage className="mr-2" />
-                View All Orders
-              </Button>
-            </Link>
-          </div>
-        </Card>
-
+        <AdminQuickActions />
         {/* Recent Orders */}
         <Card title="Order Statistics" className="mb-8">
           <div className="overflow-x-auto">
