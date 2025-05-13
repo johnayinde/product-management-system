@@ -30,8 +30,6 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log("login");
-
       setServerError("");
       await login(data);
     } catch (error: any) {
