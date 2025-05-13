@@ -29,6 +29,10 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
 
+      if (window.location.pathname.includes("/")) {
+        return;
+        // window.location.href = "/auth/login";
+      }
       if (
         typeof window !== "undefined" &&
         !window.location.pathname.includes("/auth/login")
