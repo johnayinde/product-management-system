@@ -36,6 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="relative h-48">
         <img
+          crossOrigin="anonymous"
           src={imageUrl as string}
           alt={product.name}
           width={100}

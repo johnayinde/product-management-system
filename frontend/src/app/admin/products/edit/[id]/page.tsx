@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useParams } from "next/navigation";
-import { FiSave, FiArrowLeft } from "react-icons/fi";
+import { FiSave, FiArrowLeft, FiUpload, FiX } from "react-icons/fi";
 
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
@@ -74,22 +74,22 @@ const EditProductPage: React.FC = () => {
     fetchProduct();
   }, [productId, reset]);
 
-  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     const newFiles = Array.from(files);
-  //     const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
-  //     setSelectedImages([...newFiles]);
-  //     setImagePreviews([...newPreviews]);
-  //     setValue("images", newFiles);
-  //   }
-  // };
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newFiles = Array.from(files);
+      const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+      setSelectedImages([...newFiles]);
+      setImagePreviews([...newPreviews]);
+      setValue("images", newFiles);
+    }
+  };
 
-  // const removeImage = (indexToRemove: number) => {
-  //   setImagePreviews([]);
-  //   setSelectedImages([]);
-  //   setValue("images", []);
-  // };
+  const removeImage = (indexToRemove: number) => {
+    setImagePreviews([]);
+    setSelectedImages([]);
+    setValue("images", []);
+  };
 
   const onSubmit = async (data: ProductFormData) => {
     try {
@@ -190,47 +190,49 @@ const EditProductPage: React.FC = () => {
               <label htmlFor="featured">Mark as Featured</label>
             </div>
 
-            {/* <div>
-              <label className="block text-sm font-medium mb-2">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Product Image
               </label>
-              <label
-                htmlFor="image-upload"
-                className="cursor-pointer bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100"
-              >
-                <input
-                  type="file"
-                  id="image-upload"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-                <div className="flex items-center">
-                  <FiUpload className="mr-2" />
-                  Upload Image
-                </div>
-              </label>
-
-              <div className="flex mt-4 space-x-2">
-                {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={preview}
-                      alt={`Preview ${index}`}
-                      className="h-20 w-20 object-cover rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                    >
-                      <FiX className="h-3 w-3" />
-                    </button>
+              <div className="flex items-center space-x-4">
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition"
+                >
+                  <input
+                    type="file"
+                    id="image-upload"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                  <div className="flex items-center">
+                    <FiUpload className="mr-2" />
+                    Upload Image
                   </div>
-                ))}
+                </label>
+
+                <div className="flex mt-4 space-x-2">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        crossOrigin="anonymous"
+                        src={preview}
+                        alt={`Preview ${index}`}
+                        className="h-20 w-20 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                      >
+                        <FiX className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div> */}
+            </div>
 
             <Button
               type="submit"

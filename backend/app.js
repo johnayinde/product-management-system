@@ -2,9 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
-const logger = require("./src/utils/logger");
 const errorHandler = require("./src/middleware/errorHandler");
 const rateLimit = require("express-rate-limit");
 
@@ -14,19 +14,28 @@ const orderRoutes = require("./src/routes/orderRoutes");
 
 const app = express();
 
+app.use(helmet());
+
 app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGIN?.split(","),
-    credentials: true,
+  "/uploads",
+  express.static(path.join(__dirname, "public/uploads"), {
+    setHeaders: (res) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    },
   })
 );
 
-app.use(helmet());
+// Cors Origin for Client Access
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGIN?.split(","),
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
-
-// => Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
 // Dev Logging...
@@ -43,7 +52,7 @@ const limiter = rateLimit({
   message: "Too many requestss from this IP, please try again after 15 minutes",
 });
 
-// app.use("/api", limiter);
+app.use("/api", limiter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {

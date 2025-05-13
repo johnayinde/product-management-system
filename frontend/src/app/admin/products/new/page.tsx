@@ -107,14 +107,14 @@ const ProductForm: React.FC = () => {
       if (imageUrl) {
         productData.imageUrl = imageUrl;
       }
-      const response = await productService.createProduct(productData);
+      await productService.createProduct(productData);
       reset();
       setImagePreviews([]);
       setSelectedImages([]);
 
       toast.success("Product created successfully!");
     } catch (error: any) {
-      toast.success("Failed to create product");
+      toast.error("Failed to create product");
       setServerError(
         error.response?.data?.message ||
           "Failed to create product. Please try again."
@@ -209,7 +209,6 @@ const ProductForm: React.FC = () => {
                   <input
                     type="file"
                     id="image-upload"
-                    multiple
                     accept="image/*"
                     className="hidden"
                     onChange={handleImageChange}
@@ -225,6 +224,7 @@ const ProductForm: React.FC = () => {
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className="relative">
                       <img
+                        crossOrigin="anonymous"
                         src={preview}
                         alt={`Preview ${index + 1}`}
                         className="h-20 w-20 object-cover rounded-lg"
