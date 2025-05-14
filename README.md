@@ -131,3 +131,12 @@ docker-compose up -d
 ```
 
 This will start the MongoDB database, backend API, and frontend application in containers.
+
+## Testing
+
+### Backend Tests
+
+```bash
+cd backend
+npm run test
+```
