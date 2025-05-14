@@ -121,3 +121,13 @@ A fullstack web application for managing product inventory, including features f
    ```
 
 6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Using Docker
+
+You can also run the entire application using Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This will start the MongoDB database, backend API, and frontend application in containers.
