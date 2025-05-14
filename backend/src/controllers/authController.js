@@ -39,7 +39,7 @@ const createSendToken = (user, statusCode, res) => {
   );
 };
 
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   const { name, email, password, passwordConfirm } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -56,7 +56,7 @@ exports.signup = async (req, res, next) => {
   createSendToken(newUser, 201, res);
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -106,7 +106,7 @@ exports.getMe = (req, res) => {
  * @param {Object} res - Express response object
  * @param {Function} next - Express next function
  */
-exports.updatePassword = async (req, res, next) => {
+exports.updatePassword = async (req, res) => {
   const { currentPassword, newPassword, passwordConfirm } = req.body;
 
   const user = await User.findById(req.user.id).select("+password");
@@ -138,7 +138,7 @@ exports.updatePassword = async (req, res, next) => {
  * @param {Object} res - Express response object
  * @param {Function} next - Express next function
  */
-exports.forgotPassword = async (req, res, next) => {
+exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return res
@@ -164,7 +164,7 @@ exports.forgotPassword = async (req, res, next) => {
  * @param {Object} res - Express response object
  * @param {Function} next - Express next function
  */
-exports.resetPassword = async (req, res, next) => {
+exports.resetPassword = async (req, res) => {
   const hashedToken = crypto
     .createHash("sha256")
     .update(req.params.token)
