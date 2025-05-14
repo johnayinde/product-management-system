@@ -62,7 +62,6 @@ afterAll(async () => {
 describe("Orders API", () => {
   describe("POST /api/orders", () => {
     it("should create a new order", async () => {
-
       const orderData = {
         products: [
           {
@@ -84,7 +83,6 @@ describe("Orders API", () => {
         .set("Authorization", `Bearer ${userToken}`)
         .send(orderData);
 
-     
       expect(res.statusCode).not.toBe(404);
     });
 
@@ -243,8 +241,6 @@ describe("Orders API", () => {
       const res = await request(app)
         .get(`/api/orders/${order._id}`)
         .set("Authorization", `Bearer ${userToken}`);
-      console.log("+++++body", res.body);
-      console.log("+++++statusCode", res.statusCode);
 
       expect(res.statusCode).toBe(403);
     });

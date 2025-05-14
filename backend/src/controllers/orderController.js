@@ -126,7 +126,6 @@ exports.verifyPayment = async (req, res, next) => {
     const paystackResponse = await paystack.get(
       `/transaction/verify/${reference}`
     );
-    // console.log("DATA>>", paystackResponse.data.data);
 
     // Check if payment was successful
     if (paystackResponse.data.data.status !== "success") {
@@ -163,8 +162,6 @@ exports.verifyPayment = async (req, res, next) => {
       .status(200)
       .json(ApiResponse.success("Payment verified successfully", { order }));
   } catch (error) {
-    console.log(error);
-
     logger.error("Error verifying payment:", error);
     next(new ApiError("Error verifying payment", 500));
   }
