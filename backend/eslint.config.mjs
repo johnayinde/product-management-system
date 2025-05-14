@@ -1,4 +1,4 @@
-// eslint.config.js or eslint.config.mjs
+// eslint.config.js
 import js from "@eslint/js";
 import globals from "globals";
 import { defineConfig } from "eslint/config";
@@ -16,6 +16,14 @@ export default defineConfig([
     },
     rules: {
       ...js.configs.recommended.rules,
+    },
+  },
+  {
+    files: ["**/tests/**/*.test.js", "**/tests/setup.js"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
     },
   },
 ]);
