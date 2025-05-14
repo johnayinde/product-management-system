@@ -132,6 +132,10 @@ docker-compose up -d
 
 This will start the MongoDB database, backend API, and frontend application in containers.
 
+## Admin Access
+
+By default, all registered users are assigned a regular user role with limited access. To access admin-specific features like the Admin Dashboard, you’ll need to manually update a user's role to "admin" directly in the database. This ensures secure and intentional access control during development and testing.
+
 ## Testing
 
 ### Backend Tests
