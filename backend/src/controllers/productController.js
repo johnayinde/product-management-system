@@ -82,7 +82,9 @@ exports.getProduct = async (req, res, next) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return next(new ApiError("No product found with that ID", 404));
+      return res
+        .status(404)
+        .json(ApiResponse.success("No product found with that ID"));
     }
 
     res
