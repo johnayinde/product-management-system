@@ -77,6 +77,10 @@ A fullstack web application to manage an inventory of products with user authent
    npm run dev
    ```
 
+## API Documentation
+
+- [**Postman API Documentation**](https://documenter.getpostman.com/view/11191710/2sB2qUmjLt/)
+
 ## API Endpoints
 
 ### Authentication

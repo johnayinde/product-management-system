@@ -53,6 +53,10 @@ This is the frontend for the Product Inventory Management System built with Next
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## API Documentation
+
+- [**Postman API Documentation**](https://documenter.getpostman.com/view/11191710/2sB2qUmjLt/)
+
 ## Project Structure
 
 ```
