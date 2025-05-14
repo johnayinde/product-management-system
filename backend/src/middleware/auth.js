@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const User = require("../models/userModel");
 const ApiError = require("../utils/apiError");
+const ApiResponse = require("../utils/apiResponse");
 
 /**
  * Middleware to protect routes
@@ -31,9 +32,11 @@ exports.protect = async (req, res, next) => {
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return next(
-      new ApiError("The user belonging to this token no longer exists.", 401)
-    );
+    return res
+      .status(401)
+      .json(
+        ApiResponse.error("The user belonging to this token no longer exists.")
+      );
   }
 
   // 4) Check if user changed password after the token was issued

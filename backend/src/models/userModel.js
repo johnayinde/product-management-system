@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema(
@@ -60,7 +60,6 @@ userSchema.pre("save", async function (next) {
 
   this.password = await bcrypt.hash(this.password, 12);
 
-  // Set passwordChangedAt property
   if (this.isNew) {
     this.passwordChangedAt = undefined;
   }
@@ -72,8 +71,6 @@ userSchema.pre("save", async function (next) {
 userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
 
-  // Set passwordChangedAt to current time minus 1 second
-  // This ensures the token is created after the password has been changed
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });

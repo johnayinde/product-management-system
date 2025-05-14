@@ -1,26 +1,14 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/userModel");
-const ApiError = require("../utils/apiError");
 const ApiResponse = require("../utils/apiResponse");
 
-/**
- * Create JWT token
- * @param {string} id - User ID
- * @returns {string} JWT token
- */
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-/**
- * Create and send token response
- * @param {User} user - User object
- * @param {number} statusCode - HTTP status code
- * @param {Object} res - Express response object
- */
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
@@ -38,7 +26,7 @@ const createSendToken = (user, statusCode, res) => {
 
   res.cookie("jwt", token, cookieOptions);
 
-  res.status(statusCode).json(
+  return res.status(statusCode).json(
     ApiResponse.success("Success", {
       token,
       user: {
@@ -51,19 +39,12 @@ const createSendToken = (user, statusCode, res) => {
   );
 };
 
-/**
- * Register a new user
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
- */
 exports.signup = async (req, res, next) => {
   const { name, email, password, passwordConfirm } = req.body;
 
   const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return next(new ApiError("Email already in use", 400));
-  }
+  if (existingUser)
+    return res.status(400).json(ApiResponse.error("Email already in use"));
 
   const newUser = await User.create({
     name,
@@ -71,39 +52,32 @@ exports.signup = async (req, res, next) => {
     password,
     passwordConfirm,
   });
+
   createSendToken(newUser, 201, res);
 };
 
-/**
- * Login user
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
- */
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new ApiError("Please provide email and password", 400));
+    return res
+      .status(400)
+      .json(ApiResponse.error("Please provide email and password"));
   }
   const user = await User.findOne({ email }).select("+password");
+
   if (!user) {
-    return next(new ApiError("Invalid email or password", 401));
+    return res.status(401).json(ApiResponse.error("Invalid email or password"));
   }
 
   const isPasswordCorrect = await user.correctPassword(password, user.password);
   if (!isPasswordCorrect) {
-    return next(new ApiError("Invalid email or password", 401));
+    return res.status(401).json(ApiResponse.error("Invalid email or password"));
   }
 
   createSendToken(user, 200, res);
 };
 
-/**
- * Logout user
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 exports.logout = (req, res) => {
   res.cookie("jwt", "", {
     expires: new Date(Date.now() + 10 * 1000),
@@ -113,11 +87,6 @@ exports.logout = (req, res) => {
   res.status(200).json(ApiResponse.success("Logged out successfully"));
 };
 
-/**
- * Get current user
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 exports.getMe = (req, res) => {
   res.status(200).json(
     ApiResponse.success("Success", {
@@ -148,10 +117,14 @@ exports.updatePassword = async (req, res, next) => {
   );
 
   if (!isPasswordCorrect)
-    next(new ApiError("Your current password is incorrect", 401));
+    return res
+      .status(400)
+      .json(ApiResponse.error("Your current password is incorrect"));
 
   if (newPassword !== passwordConfirm)
-    next(new ApiError("New passwords do not match", 400));
+    return res
+      .status(400)
+      .json(ApiResponse.success("New passwords do not match"));
 
   user.password = newPassword;
   await user.save();
@@ -168,7 +141,9 @@ exports.updatePassword = async (req, res, next) => {
 exports.forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return next(new ApiError("There is no user with that email address", 404));
+    return res
+      .status(200)
+      .json(ApiResponse.error("There is no user with that email address"));
   }
 
   const resetToken = user.createPasswordResetToken();
@@ -200,7 +175,10 @@ exports.resetPassword = async (req, res, next) => {
     passwordResetExpires: { $gt: Date.now() },
   });
 
-  if (!user) next(new ApiError("Token is invalid or has expired", 400));
+  if (!user)
+    return res
+      .status(200)
+      .json(ApiResponse.error("Token is invalid or has expired"));
 
   user.password = req.body.password;
   user.passwordResetToken = undefined;
