@@ -65,8 +65,8 @@ const CheckoutForm: React.FC = () => {
       const response = await orderService.createOrder(orderData);
 
       if (response.data.paymentUrl) {
-        clearCart();
         window.location.href = response.data.paymentUrl;
+        clearCart();
       } else {
         throw new Error("Payment URL not provided");
       }

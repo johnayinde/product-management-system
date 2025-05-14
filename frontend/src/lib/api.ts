@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
@@ -26,12 +27,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.status === 429) toast.error(error.response.data.message);
+
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
 
-      if (window.location.pathname === "/") {
-        window.location.href = "/";
-      }
       if (
         typeof window !== "undefined" &&
         !window.location.pathname.includes("/auth/login")

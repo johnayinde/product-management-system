@@ -58,7 +58,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isPublicPage =
     publicPaths.includes(pathname || "") ||
-    pathname?.startsWith("/auth/reset-password");
+    pathname?.startsWith("/auth/reset-password") ||
+    pathname?.startsWith("/products");
 
   // Check if user is authenticated
   const checkAuth = async () => {
